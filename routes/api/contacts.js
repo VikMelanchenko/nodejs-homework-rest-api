@@ -50,7 +50,7 @@ router.delete('/:contactId', async (req, res, next) => {
   }
 });
 
-router.patch('/:contactId', validate.updateContact, async (req, res, next) => {
+router.put('/:contactId', validate.updateContact, async (req, res, next) => {
   try {
     const { contactId } = req.params;
     const result = await Contacts.getContactById(contactId, next);
