@@ -1,23 +1,10 @@
-// const fs = require('fs/promises');
-// const path = require('path');
 const db = require('./mongodb');
 const { ObjectID } = require('mongodb');
-
-// const contactsPath = path.join(__dirname, './contacts.json');
-
-//helpers
-
-const getCollection = async (db, name) => {
-  const client = await db;
-  const collection = await client.db().collection(name);
-  return collection;
-};
+const getCollection = require('./helpers');
 
 const listContacts = async () => {
   const collection = await getCollection(db, 'contacts');
   const results = await collection.find({}).toArray();
-  // const data = await fs.readFile(contactsPath, 'utf-8');
-  // const contacts = JSON.parse(data);
   return results;
 };
 
@@ -27,12 +14,6 @@ const getContactById = async (contactId) => {
   console.log(objectId.getTimestamp());
   const [result] = await collection.find({ _id: objectId }).toArray();
   return result;
-  // const data = await fs.readFile(contactsPath, 'utf-8');
-  // const contacts = JSON.parse(data);
-  // const getContact = contacts.find(
-  //   (contact) => contact.id === Number(contactId)
-  // );
-  // return getContact;
 };
 
 const addContact = async (body) => {
@@ -63,17 +44,6 @@ const removeContact = async (contactId) => {
     _id: objectId,
   });
   return result;
-  // const data = await fs.readFile(contactsPath, 'utf-8');
-  // const contacts = JSON.parse(data);
-  // const deletedContact = contacts.filter(
-  //   (contact) => contact.id !== Number(contactId)
-  // );
-  // if (contacts.length === deletedContact.length) {
-  //   return console.error(`Contact with ID ${contactId} not found`);
-  // }
-  // await fs.writeFile(contactsPath, JSON.stringify(deletedContact));
-  // console.log(`Contact with ID ${contactId} removed succesfully`);
-  // return deletedContact;
 };
 
 const updateContact = async (contactId, body) => {
@@ -85,18 +55,6 @@ const updateContact = async (contactId, body) => {
     { returnOriginal: false }
   );
   return result;
-
-  // const data = await fs.readFile(contactsPath, 'utf-8');
-  // const contacts = JSON.parse(data);
-  // const contact = await getContactById(contactId);
-  // const updatedContacts = contacts.map((contact) => {
-  //   if (contact.id === Number(contactId)) {
-  //     return { ...contact, ...body };
-  //   }
-  //   return contact;
-  // });
-  // await fs.writeFile(contactsPath, JSON.stringify(updatedContacts));
-  // return { ...contact, ...body };
 };
 
 module.exports = {
