@@ -1,10 +1,11 @@
-const db = require('./mongodb');
-const { ObjectID } = require('mongodb');
-const getCollection = require('./helpers');
+// const db = require('./mongodb');
+// const { ObjectID } = require('mongodb');
+// const getCollection = require('./helpers');
+
+const Contact = require('./schemas/contact');
 
 const listContacts = async () => {
-  const collection = await getCollection(db, 'contacts');
-  const results = await collection.find({}).toArray();
+  const results = await Contact.find({});
   return results;
 };
 
