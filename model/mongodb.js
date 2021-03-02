@@ -21,20 +21,20 @@ const db = mongoose.connect(uriDb, {
 //event listeners
 
 mongoose.connection.on('connected', () => {
-  console.log('Mongoose connection to db');
+  console.log('Database connection successful');
 });
 
 mongoose.connection.on('error', (err) => {
-  console.log(`Mongoose connection error ${err.message}`);
+  console.log(`Database connection error ${err.message}`);
 });
 
 mongoose.connection.on('disconnected', () => {
-  console.log('Mongoose disconnected');
+  console.log('Database disconnected');
 });
 
 process.on('SIGINT', async () => {
   await mongoose.connection.close();
-  console.log('Connection for db and app was terminated');
+  console.log('Database connection for db and app was terminated');
   process.exit(1);
 });
 
