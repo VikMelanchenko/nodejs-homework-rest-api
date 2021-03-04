@@ -17,6 +17,7 @@ const getContactById = async (contactId) => {
 const addContact = async (body) => {
   const newContact = await Contact.create(body);
   return newContact;
+
   // const newContact = {
   //   ...body,
   //   ...(body ? {} : { body: false }),
@@ -42,6 +43,14 @@ const removeContact = async (contactId) => {
 };
 
 const updateContact = async (contactId, body) => {
+  const result = await Contact.findByIdAndUpdate(
+    contactId,
+    { ...body },
+    {
+      returnOriginal: false,
+    }
+  );
+  return result;
   // const collection = await getCollection(db, 'contacts');
   // const objectId = new ObjectID(contactId);
   // const { value: result } = await collection.findOneAndUpdate(
@@ -49,13 +58,6 @@ const updateContact = async (contactId, body) => {
   //   { $set: body },
   //   { returnOriginal: false }
   // );
-
-  const result = await Contact.findByIdAndUpdate(
-    { _id: contactId },
-    { ...body },
-    { new: true } // новое значение
-  );
-  return result;
 };
 
 module.exports = {

@@ -11,16 +11,16 @@ const contactSchema = new Schema(
       type: String,
       unique: true,
     },
-    phone: {
-      type: Number,
-      unique: true,
-    },
     subscription: {
       type: String,
     },
+    password: { type: String, required: [true, 'Set password'] },
+
+    token: {
+      type: String,
+      default: '',
+    },
     date: { type: Date, default: () => Date.now() },
-    password: {},
-    token: {},
   },
   { versionKey: false, timestamps: true }
 );

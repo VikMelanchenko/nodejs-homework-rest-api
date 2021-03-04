@@ -25,7 +25,7 @@ const create = async (req, res, next) => {
   try {
     const contact = await Contacts.addContact(req.body);
 
-    if (!contact.name || !contact.email || !contact.phone) {
+    if (!contact.name || !contact.email) {
       return res.status(400).json({ message: 'missing required name field' });
     }
 
@@ -48,18 +48,17 @@ const remove = async (req, res, next) => {
 };
 
 const update = async (req, res, next) => {
+  const { body } = req;
+  const { contactId } = req.params;
+  console.log(contactId);
+
   try {
-    const { contactId } = req.params;
-    const result = await Contacts.getContactById(contactId, next);
-    if (!result) {
+    const result = await Contacts.updateContact(contactId, body);
+    if (result) {
+      return res.status(200).json(result);
+    } else {
       return res.status(404).json({ message: 'Not found' });
     }
-
-    const updatedResult = await Contacts.updateContact(contactId, req.body);
-    if (!req.body) {
-      return res.status(400).json({ message: 'missing fields' });
-    }
-    return res.status(200).json(updatedResult);
   } catch (err) {
     next(err);
   }
