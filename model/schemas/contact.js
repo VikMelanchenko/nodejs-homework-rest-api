@@ -18,7 +18,7 @@ const contactSchema = new Schema(
 
     token: {
       type: String,
-      default: '',
+      default: null,
     },
     date: { type: Date, default: () => Date.now() },
   },
