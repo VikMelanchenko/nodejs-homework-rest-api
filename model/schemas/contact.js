@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { Schema, model } = mongoose;
+const { Schema, model, SchemaTypes } = mongoose;
 
 const contactSchema = new Schema(
   {
@@ -14,11 +14,18 @@ const contactSchema = new Schema(
     subscription: {
       type: String,
     },
-    password: { type: String, required: [true, 'Set password'] },
+    password: {
+      type: String,
+      required: [true, 'Set password'],
+    },
 
     token: {
       type: String,
       default: null,
+    },
+    owner: {
+      type: SchemaTypes.ObjectId,
+      ref: 'user',
     },
     date: { type: Date, default: () => Date.now() },
   },
