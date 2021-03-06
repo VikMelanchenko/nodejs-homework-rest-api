@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const Users = require('../model/users');
-const { HTTPCode } = require('../model/helpers');
+const { HTTPCode } = require('../helpers/helpers');
 require('dotenv').config();
 const SECRET_KEY = process.env.JWT_SECRET;
 
@@ -38,7 +38,10 @@ const login = async (req, res, next) => {
     const { email, password } = req.body;
     const user = await Users.findByEmail(email);
 
-    if (!user || !user.validPassword(password)) {
+    const isValidPassword = await user.validPassword(password);
+    console.log(isValidPassword);
+
+    if (!user || !isValidPassword) {
       return res.status(HTTPCode.UNAUTHORIZED).json({
         status: 'error',
         code: HTTPCode.UNAUTHORIZED,
@@ -49,17 +52,24 @@ const login = async (req, res, next) => {
     const id = user.id;
     console.log(user);
     const payload = { id };
-    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '4h' });
+    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' });
     console.log(token);
-    await Users.updateToken(id, token);
-    return await res.status(HTTPCode.OK).json({
+
+    const decode = jwt.decode(token);
+    console.log(decode);
+
+    const verify = jwt.verify(token, SECRET_KEY);
+    console.log(verify);
+
+    // await Users.updateToken(id, token);
+    return res.status(HTTPCode.OK).json({
       status: 'success',
       code: HTTPCode.OK,
       data: {
         token,
         user: {
           email: user.email,
-          subscription: user.subscription,
+          password: user.password,
         },
       },
     });
