@@ -53,13 +53,12 @@ const login = async (req, res, next) => {
     console.log(user);
     const payload = { id };
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' });
-    console.log(token);
+    // console.log(token);
+    // const decode = jwt.decode(token);
+    // console.log(decode);
 
-    const decode = jwt.decode(token);
-    console.log(decode);
-
-    const verify = jwt.verify(token, SECRET_KEY);
-    console.log(verify);
+    // const verify = jwt.verify(token, SECRET_KEY);
+    // console.log(verify);
 
     await Users.updateToken(id, token);
     return res.status(HTTPCode.OK).json({
