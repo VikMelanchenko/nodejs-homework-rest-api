@@ -61,7 +61,7 @@ const login = async (req, res, next) => {
     const verify = jwt.verify(token, SECRET_KEY);
     console.log(verify);
 
-    // await Users.updateToken(id, token);
+    await Users.updateToken(id, token);
     return res.status(HTTPCode.OK).json({
       status: 'success',
       code: HTTPCode.OK,
