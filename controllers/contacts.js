@@ -2,8 +2,7 @@ const Contacts = require('../model/contacts');
 
 const getAll = async (_req, res, next) => {
   try {
-    const owner = req.user.id;
-    const contacts = await Contacts.listContacts(owner);
+    const contacts = await Contacts.listContacts();
     return res.status(200).json({ contacts });
   } catch (e) {
     next(e);
@@ -12,8 +11,7 @@ const getAll = async (_req, res, next) => {
 
 const getById = async (req, res, next) => {
   try {
-    const owner = req.user.id;
-    const contact = await Contacts.getContactById(req.params.contactId, owner);
+    const contact = await Contacts.getContactById(req.params.contactId);
     if (!contact) {
       return res.status(404).json({ message: 'Not found' });
     }
@@ -25,8 +23,7 @@ const getById = async (req, res, next) => {
 
 const create = async (req, res, next) => {
   try {
-    const owner = req.user.id;
-    const contact = await Contacts.addContact({ ...req.body, owner: owner });
+    const contact = await Contacts.addContact(req.body);
 
     if (!contact.name || !contact.email) {
       return res.status(400).json({ message: 'missing required name field' });
@@ -40,8 +37,7 @@ const create = async (req, res, next) => {
 
 const remove = async (req, res, next) => {
   try {
-    const owner = req.user.id;
-    const contact = await Contacts.removeContact(req.params.contactId, owner);
+    const contact = await Contacts.removeContact(req.params.contactId);
     if (!contact) {
       return res.status(404).json({ message: 'Not found' });
     }
@@ -57,8 +53,7 @@ const update = async (req, res, next) => {
   console.log(contactId);
 
   try {
-    const owner = req.user.id;
-    const result = await Contacts.updateContact(contactId, body, owner);
+    const result = await Contacts.updateContact(contactId, body);
     if (result) {
       return res.status(200).json(result);
     } else {
