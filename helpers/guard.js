@@ -1,13 +1,13 @@
 const passport = require('passport');
 require('../config/passport');
-const HTTPcode = require('./helpers');
+const { HTTPCode } = require('./helpers');
 
 const guard = (req, res, next) => {
-  passport.authenticate('jwt', { session: false }, (error, user) => {
-    if (!user || error) {
-      return res.status(HTTPcode.FORBIDDEN).json({
+  passport.authenticate('jwt', { session: false }, (err, user) => {
+    if (!user || err || token !== user.token) {
+      return res.status(HTTPCode.FORBIDDEN).json({
         status: 'error',
-        code: HTTPcode.FORBIDDEN,
+        code: HTTPCode.FORBIDDEN,
         data: 'Forbidden',
         message: 'Not authorized',
       });
@@ -17,6 +17,4 @@ const guard = (req, res, next) => {
   })(req, res, next);
 };
 
-module.exports = {
-  guard,
-};
+module.exports = guard;

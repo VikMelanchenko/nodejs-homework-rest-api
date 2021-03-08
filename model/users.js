@@ -1,8 +1,7 @@
 const User = require('./schemas/user');
 
 const findByEmail = async (email) => {
-  const user = await User.findOne({ email });
-  return user;
+  return await User.findOne({ email });
 };
 
 const findById = async (id) => {

@@ -6,7 +6,7 @@ const listContacts = async () => {
 };
 
 const getContactById = async (contactId) => {
-  const result = await Contact.findOne({ _id: contactId });
+  const result = await Contact.findOne(contactId);
   return result;
 };
 
@@ -16,15 +16,13 @@ const addContact = async (body) => {
 };
 
 const removeContact = async (contactId) => {
-  const result = await Contact.findByIdAndRemove({
-    _id: contactId,
-  });
+  const result = await Contact.findByIdAndRemove(contactId);
   return result;
 };
 
 const updateContact = async (contactId, body) => {
   const result = await Contact.findByIdAndUpdate(
-    { _id: contactId },
+    contactId,
     { ...body },
     {
       returnOriginal: false,

@@ -38,10 +38,7 @@ const login = async (req, res, next) => {
     const { email, password } = req.body;
     const user = await Users.findByEmail(email);
 
-    const isValidPassword = await user.validPassword(password);
-    console.log(isValidPassword);
-
-    if (!user || !isValidPassword) {
+    if (!user || !user.validPassword(password)) {
       return res.status(HTTPCode.UNAUTHORIZED).json({
         status: 'error',
         code: HTTPCode.UNAUTHORIZED,
@@ -52,17 +49,17 @@ const login = async (req, res, next) => {
     const id = user.id;
     console.log(user);
     const payload = { id };
-    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' });
-
+    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '4h' });
+    console.log(token);
     await Users.updateToken(id, token);
-    return res.status(HTTPCode.OK).json({
+    return await res.status(HTTPCode.OK).json({
       status: 'success',
       code: HTTPCode.OK,
       data: {
         token,
         user: {
           email: user.email,
-          password: user.password,
+          subscription: user.subscription,
         },
       },
     });
@@ -70,7 +67,6 @@ const login = async (req, res, next) => {
     return next(e);
   }
 };
-
 const logout = async (rec, res, next) => {};
 
 module.exports = {
