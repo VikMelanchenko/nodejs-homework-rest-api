@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const Users = require('../model/users');
 const { HTTPCode } = require('../helpers/helpers');
+const passport = require('passport');
 require('dotenv').config();
 const SECRET_KEY = process.env.JWT_SECRET;
 
@@ -38,7 +39,9 @@ const login = async (req, res, next) => {
     const { email, password } = req.body;
     const user = await Users.findByEmail(email);
 
-    if (!user || !user.validPassword(password)) {
+    const isValidPassword = await user.validPassword(password);
+
+    if (!user || !isValidPassword) {
       return res.status(HTTPCode.UNAUTHORIZED).json({
         status: 'error',
         code: HTTPCode.UNAUTHORIZED,
@@ -47,10 +50,8 @@ const login = async (req, res, next) => {
       });
     }
     const id = user.id;
-    console.log(user);
     const payload = { id };
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '4h' });
-    console.log(token);
     await Users.updateToken(id, token);
     return await res.status(HTTPCode.OK).json({
       status: 'success',
