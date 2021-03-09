@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const Users = require('../model/users');
 const { HTTPCode } = require('../helpers/helpers');
-const passport = require('passport');
 require('dotenv').config();
 const SECRET_KEY = process.env.JWT_SECRET;
 
@@ -68,7 +67,11 @@ const login = async (req, res, next) => {
     return next(e);
   }
 };
-const logout = async (rec, res, next) => {};
+const logout = async (req, res, next) => {
+  const userId = req.user.id;
+  await Users.updateToken(userId, null);
+  return res.status(HTTPCode.NO_CONTENT).json({});
+};
 
 module.exports = {
   reg,

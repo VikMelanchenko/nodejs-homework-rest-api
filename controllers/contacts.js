@@ -1,8 +1,9 @@
 const Contacts = require('../model/contacts');
 
-const getAll = async (_req, res, next) => {
+const getAll = async (req, res, next) => {
   try {
-    const contacts = await Contacts.listContacts();
+    const userId = req.user.id;
+    const contacts = await Contacts.listContacts(userId);
     return res.status(200).json({ contacts });
   } catch (e) {
     next(e);
@@ -11,7 +12,8 @@ const getAll = async (_req, res, next) => {
 
 const getById = async (req, res, next) => {
   try {
-    const contact = await Contacts.getContactById(req.params.contactId);
+    const userId = req.user.id;
+    const contact = await Contacts.getContactById(req.params.contactId, userId);
     if (!contact) {
       return res.status(404).json({ message: 'Not found' });
     }
@@ -23,7 +25,8 @@ const getById = async (req, res, next) => {
 
 const create = async (req, res, next) => {
   try {
-    const contact = await Contacts.addContact(req.body);
+    const userId = req.user.id;
+    const contact = await Contacts.addContact({ ...req.body, owner: userId });
 
     if (!contact.name || !contact.email) {
       return res.status(400).json({ message: 'missing required name field' });
@@ -37,7 +40,8 @@ const create = async (req, res, next) => {
 
 const remove = async (req, res, next) => {
   try {
-    const contact = await Contacts.removeContact(req.params.contactId);
+    const userId = req.user.id;
+    const contact = await Contacts.removeContact(req.params.contactId, userId);
     if (!contact) {
       return res.status(404).json({ message: 'Not found' });
     }
@@ -50,10 +54,10 @@ const remove = async (req, res, next) => {
 const update = async (req, res, next) => {
   const { body } = req;
   const { contactId } = req.params;
-  console.log(contactId);
 
   try {
-    const result = await Contacts.updateContact(contactId, body);
+    const userId = req.user.id;
+    const result = await Contacts.updateContact(contactId, body, userId);
     if (result) {
       return res.status(200).json(result);
     } else {

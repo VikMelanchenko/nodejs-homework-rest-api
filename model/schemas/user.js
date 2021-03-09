@@ -4,6 +4,11 @@ const SALT_WORK_FACTOR = 8;
 
 const userSchema = new Schema(
   {
+    name: {
+      type: String,
+      default: 'Guest',
+      required: [true, 'Set name for contact'],
+    },
     email: {
       type: String,
       required: [true, 'Email required'],
@@ -31,19 +36,14 @@ const userSchema = new Schema(
   { versionKey: false, timestamps: false }
 );
 
-userSchema.pre('save', async (next) => {
+userSchema.pre('save', function (next) {
   if (!this.isModified('password')) {
     return next();
   }
-  const salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
-  this.password = await bcrypt.hash(this.password, salt, null);
+  const salt = bcrypt.genSaltSync(SALT_WORK_FACTOR);
+  this.password = bcrypt.hashSync(this.password, salt, null);
   return next();
 });
-
-// userSchema.path('email').validate(function (value) {
-//   const re = /\S+@\S+\.\S+/;
-//   return re.test(String(value).toLowerCase());
-// });
 
 userSchema.methods.validPassword = async function (password) {
   return await bcrypt.compare(password, this.password);
