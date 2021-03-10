@@ -1,7 +1,7 @@
-const mutler = require('multer');
+const multer = require('multer');
 const path = require('path');
 require('dotenv').config();
-const UPLOAD_DIR = path(process.cwd(), process.env.UPLOAD_DIR);
+const UPLOAD_DIR = path.join(process.cwd(), process.env.UPLOAD_DIR);
 // const storeImage = path(process.cwd(), 'images');
 
 const storage = multer.diskStorage({
