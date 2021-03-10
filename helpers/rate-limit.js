@@ -4,7 +4,7 @@ const { HTTPCode } = require('./helpers');
 
 const createAccLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes //кол-ао милисекудн за один час - ограничение регистраций
-  max: 2,
+  max: 100,
   handler: (_req, res, _next) => {
     return res.status(HTTPCode.BAD_REQUEST).json({
       status: 'error',

@@ -2,6 +2,7 @@ const express = require('express');
 const logger = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
+const multer = require('multer');
 const rateLimit = require('express-rate-limit');
 
 const { HTTPCode } = require('./helpers/helpers');

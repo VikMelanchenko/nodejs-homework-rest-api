@@ -26,6 +26,7 @@ const reg = async (req, res, next) => {
         email: newUser.email,
         name: newUser.name,
         subscription: newUser.subscription,
+        avatar: newUser.avatar,
       },
     });
   } catch (e) {
@@ -38,7 +39,7 @@ const login = async (req, res, next) => {
     const { email, password } = req.body;
     const user = await Users.findByEmail(email);
 
-    const isValidPassword = await user.validPassword(password);
+    const isValidPassword = await user?.validPassword(password);
 
     if (!user || !isValidPassword) {
       return res.status(HTTPCode.UNAUTHORIZED).json({
