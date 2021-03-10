@@ -8,7 +8,12 @@ const listContacts = async (
     { owner: userId },
     {
       limit,
-      page: offset,
+      offset,
+      sort: {
+        ...(sortBy ? { [`${sortBy}`]: 1 } : {}), //по возврастанию
+        ...(sortByDesc ? { [`${sortByDesc}`]: -1 } : {}), // по убыванию
+      },
+      select: filter ? filter.split('|').join(' ') : '', // приходит owner в любом случае по причине paginate
       populate: {
         path: 'owner',
         select: 'name email -_id',
